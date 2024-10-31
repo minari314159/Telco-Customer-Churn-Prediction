@@ -1,6 +1,11 @@
 import numpy as np
 import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
 from scipy.stats import iqr, zscore
+
+colour_pal = sns.color_palette('flare')
+
 
 def missing_data(input_data: pd.DataFrame) -> pd.DataFrame:
     '''
@@ -56,3 +61,22 @@ def mean_std_outliers(df: pd.DataFrame) -> float:
           f'Lower threshold:{lower}', f'Upper threshold: {upper}')
 
     return upper, lower
+
+
+def plot_feature_importance(model) -> None:
+    """
+    Plot the feature importance of a model
+
+    Args:
+       model (pd.DataFrame): The dataframe of feature model
+
+    Returns:
+        None
+    """
+
+    importances = pd.DataFrame(data=model.feature_importances_,
+                               index=model.feature_names_in_, columns=['importance'])
+    sorted_importances = importances.sort_values('importance')
+    sorted_importances.plot(
+        kind='barh', figsize=(10, 5), color=colour_pal[0], title='Feature Importance')
+    plt.show()
