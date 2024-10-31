@@ -63,7 +63,7 @@ def mean_std_outliers(df: pd.DataFrame) -> float:
     return upper, lower
 
 
-def plot_feature_importance(model) -> None:
+def plot_feature_importance(model, limit) -> None:
     """
     Plot the feature importance of a model
 
@@ -75,8 +75,9 @@ def plot_feature_importance(model) -> None:
     """
 
     importances = pd.DataFrame(data=model.feature_importances_,
-                               index=model.feature_names_in_, columns=['importance'])
-    sorted_importances = importances.sort_values('importance')
+                               index=model.get_booster().feature_names, columns=['importance'])
+    sorted_importances = importances[importances['importance'] > limit].sort_values(
+        'importance')
     sorted_importances.plot(
-        kind='barh', figsize=(10, 5), color=colour_pal[0], title='Feature Importance')
+        kind='barh', figsize=(20, 10), color=colour_pal[0], title='Feature Importance')
     plt.show()
